@@ -24,6 +24,7 @@ void page_table_update(uint64_t pt, uint64_t vpn, uint64_t ppn){
     entrynumber=(vpn>>12)&(512-1);
     if(ppn!=NO_MAPPING){
         tablePointer[entrynumber] = (ppn<<12) | 1;
+        printBits()
     }
     else{
         tablePointer[entrynumber] = 0; //invalid 
