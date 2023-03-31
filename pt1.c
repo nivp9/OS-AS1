@@ -9,10 +9,11 @@ void page_table_update(uint64_t pt, uint64_t vpn, uint64_t ppn){
 
     for(i=0;i<4;i++){
         uint64_t mask=512-1;                                    //9-bits for 512 entries
-        int offset = ((57)-9*(i+1));                        // ignore sign-extend
+        int offset = ((45)-9*(i+1));                        // ignore sign-extend
         entrynumber=(vpn >> offset)&mask;
         if(isvalid(tablePointer[entrynumber])==0){                //faced invalid entry
             if(ppn ==NO_MAPPING){                            // invalid entry + needed to be destroyed = done
+
                 return;
             }
             uint64_t x= (alloc_page_frame()<<12)|1;
@@ -21,10 +22,9 @@ void page_table_update(uint64_t pt, uint64_t vpn, uint64_t ppn){
 
         tablePointer=phys_to_virt(tablePointer[entrynumber]&((~0)<<12)); //entry without 12 first bits
     }
-    entrynumber=(vpn>>12)&(512-1);
+    entrynumber=(vpn)&(512-1);
     if(ppn!=NO_MAPPING){
         tablePointer[entrynumber] = (ppn<<12) | 1;
-        printBits()
     }
     else{
         tablePointer[entrynumber] = 0; //invalid 
@@ -34,24 +34,20 @@ void page_table_update(uint64_t pt, uint64_t vpn, uint64_t ppn){
 
 
 uint64_t page_table_query(uint64_t pt, uint64_t vpn){
-    printf("new run \n");
-
     int i;
     int entrynumber;
     uint64_t *tablePointer = phys_to_virt(pt<<12);              //given page number add offset to create address
     uint64_t res;
     for(i=0;i<5;i++){
         int64_t mask=512-1;                                    //9-bits for 512 entries
-        int offset = ((57)-9*(i+1));                        // ignore sign-extend
+        int offset = ((45)-9*(i+1));                        // ignore sign-extend
         entrynumber=(vpn >> offset)&mask;
         if(isvalid(tablePointer[entrynumber])==0){                //faced invalid entry
-            printf("NO MAP %i \n",i);
            return NO_MAPPING;
         }
         if(i<4)
-            tablePointer=phys_to_virt(tablePointer[entrynumber&((~0)<<12)]); //entry without 12 first bits
+            tablePointer=phys_to_virt(tablePointer[entrynumber]&((~0)<<12)); //entry without 12 first bits
         else{
-            printf("entry: %d, val: %d \n",entrynumber,tablePointer[entrynumber]);
             res= tablePointer[entrynumber]>>12;
         }
     }
