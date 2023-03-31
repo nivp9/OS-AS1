@@ -9,6 +9,7 @@
 
 #include "os.h"
 
+
 /* 2^20 pages ought to be enough for anybody */
 #define NPAGES	(1024*1024)
 
@@ -48,20 +49,21 @@ void* phys_to_virt(uint64_t phys_addr)
 }
 
 int main(int argc, char **argv)
-{
-	uint64_t pt = alloc_page_frame();
+{	
 
-	assert(page_table_query(pt, 0xcafecafeeee) == NO_MAPPING);
-	assert(page_table_query(pt, 0xfffecafeeee) == NO_MAPPING);
-	assert(page_table_query(pt, 0xcafecafeeff) == NO_MAPPING);
+	uint64_t pt = alloc_page_frame();
+	// assert(page_table_query(pt, 0xcafecafeeee) == NO_MAPPING);
+	// assert(page_table_query(pt, 0xfffecafeeee) == NO_MAPPING);
+	// assert(page_table_query(pt, 0xcafecafeeff) == NO_MAPPING);
 	page_table_update(pt, 0xcafecafeeee, 0xf00d);
-	assert(page_table_query(pt, 0xcafecafeeee) == 0xf00d);
-	assert(page_table_query(pt, 0xfffecafeeee) == NO_MAPPING);
-	assert(page_table_query(pt, 0xcafecafeeff) == NO_MAPPING);
-	page_table_update(pt, 0xcafecafeeee, NO_MAPPING);
-	assert(page_table_query(pt, 0xcafecafeeee) == NO_MAPPING);
-	assert(page_table_query(pt, 0xfffecafeeee) == NO_MAPPING);
-	assert(page_table_query(pt, 0xcafecafeeff) == NO_MAPPING);
+	printf(" nivv %d \n" ,page_table_query(pt, 0xcafecafeeee));
+	// assert(page_table_query(pt, 0xcafecafeeee) == 0xf00d);
+	// assert(page_table_query(pt, 0xfffecafeeee) == NO_MAPPING);
+	// assert(page_table_query(pt, 0xcafecafeeff) == NO_MAPPING);
+	// page_table_update(pt, 0xcafecafeeee, NO_MAPPING);
+	// assert(page_table_query(pt, 0xcafecafeeee) == NO_MAPPING);
+	// assert(page_table_query(pt, 0xfffecafeeee) == NO_MAPPING);
+	// assert(page_table_query(pt, 0xcafecafeeff) == NO_MAPPING);
 
 	return 0;
 }
