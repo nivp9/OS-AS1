@@ -1,6 +1,4 @@
 #include "os.h"
-#include <stdio.h>
-
 int isvalid(uint64_t entry);
 void page_table_update(uint64_t pt, uint64_t vpn, uint64_t ppn){
     int i;
